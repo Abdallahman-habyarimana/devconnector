@@ -6,11 +6,14 @@ import { connect } from 'react-redux';
 import { addLike, removeLike, deletePost } from '../../actions/post'
 
 
-const PostItem = ({ addLike, removeLike, deletePost, auth, post: { _id, text, name, avatar, user, likes, comments, date}
+const PostItem = ({ addLike, removeLike, deletePost, auth, post: { _id, text, name, avatar, user, likes, comments, date},
+    showActions
 }) => <div className="post bg-white p-1 my-1">
         <div>
-            <a href="profile.html"> <img className="round-img" src={avatar} alt='' />
-            <h4>{name}</h4> </a>
+            <Link to={`/profile/${user}`}> 
+                <img className="round-img" src={avatar} alt='' />
+                <h4>{name}</h4> 
+            </Link>
         </div>
   
         <div>
@@ -18,7 +21,9 @@ const PostItem = ({ addLike, removeLike, deletePost, auth, post: { _id, text, na
             <p className="post-date">
                 Posted on <Moment format='/YYYY/MM/DD'>{date}</Moment>
             </p>
-            <button onClick={e => addLike(_id)} type="button" className="btn btn-light">
+
+            {showActions && <Fragment>
+                <button onClick={e => addLike(_id)} type="button" className="btn btn-light">
             <i className="fas fa-thumbs-up" /> {' '}
                 <span>{likes.length > 0 && <span>{likes.length}</span>}</span>
             </button>
@@ -36,9 +41,14 @@ const PostItem = ({ addLike, removeLike, deletePost, auth, post: { _id, text, na
                 <i className="fas fa-times"></i>
             </button>
         )}
+                </Fragment>}
+           
     </div>
 </div> 
 
+PostItem.defaultProps = {
+    showActions: true
+}
 
 PostItem.propTypes = {
     post:PropTypes.object.isRequired,
@@ -46,6 +56,7 @@ PostItem.propTypes = {
     addLike: PropTypes.func.isRequired,
     removeLike:PropTypes.func.isRequired,
     deletePost: PropTypes.func.isRequired,
+
 }
 
 const mapStateToProps = state => ({
